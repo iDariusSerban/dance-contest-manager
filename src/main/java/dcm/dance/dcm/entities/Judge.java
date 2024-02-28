@@ -17,7 +17,7 @@ public class Judge {
     @JsonBackReference("division-judge")
     @JoinColumn(name = "division_id")
     private Division division;
-    @OneToMany(mappedBy = "Judge",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "judge",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("judge-grade")
     private List<Grade> gradeList;
 

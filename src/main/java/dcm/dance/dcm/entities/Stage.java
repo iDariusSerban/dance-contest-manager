@@ -17,7 +17,7 @@ public class Stage {
     @JsonBackReference("division-stage")
     @JoinColumn(name = "division_id")
     private Division division;
-    @OneToMany(mappedBy = "Stage",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "stage",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("stage-grade")
     private List<Grade> gradeList;
     @ManyToOne

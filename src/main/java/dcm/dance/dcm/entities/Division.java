@@ -18,10 +18,10 @@ public class Division {
     @JsonBackReference("contest-division")
     @JoinColumn(name = "contest_id")
     private Contest contest;
-    @OneToMany(mappedBy = "Division", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "division", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("division-stage")
     private List<Stage> stageList;
-    @OneToMany(mappedBy = "Division", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "division", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("division-judge")
     private List<Judge> judgeList;
 

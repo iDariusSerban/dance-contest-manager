@@ -1,4 +1,4 @@
-package com.example.demo;
+package dcm.dance.dcm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

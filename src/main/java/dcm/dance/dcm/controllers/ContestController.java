@@ -26,6 +26,13 @@ public class ContestController {
 
     @PostMapping("/add")
     public ResponseEntity<Contest> addContest(@RequestBody ContestRequestDTO contestRequestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(contestService.addContest(contestRequestDTO));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(contestService.addContest(contestRequestDTO));
+        } catch (Exception e) {
+            // Adaugă un logging pentru a afișa detalii despre excepție
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+       // return ResponseEntity.status(HttpStatus.CREATED).body(contestService.addContest(contestRequestDTO));
     }
 }

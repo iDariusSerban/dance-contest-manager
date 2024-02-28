@@ -23,10 +23,10 @@ public class Participant {
     @Column
     private String coupleNumber;
 
-    @OneToMany(mappedBy = "Participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("participant-grade")
     private List<Grade> gradeList;
-    @OneToMany(mappedBy = "Participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("participant-stage")
     private List<Stage> stageList;
 

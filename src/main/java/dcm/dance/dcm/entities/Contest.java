@@ -14,7 +14,7 @@ public class Contest {
     private String name;
     @Column
     private String location;
-    @OneToMany(mappedBy = "Contest",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "contest",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("contest-division")
     private List<Division> divisionList;
 
