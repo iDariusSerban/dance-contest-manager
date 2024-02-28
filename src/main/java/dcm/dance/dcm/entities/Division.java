@@ -4,12 +4,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Division {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private DivisionType divisionType;
@@ -17,14 +18,23 @@ public class Division {
     @JsonBackReference("contest-division")
     @JoinColumn(name = "contest_id")
     private Contest contest;
-    @OneToMany(mappedBy = "Division",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "Division", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("division-stage")
     private List<Stage> stageList;
-    @OneToMany(mappedBy = "Division",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "Division", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("division-judge")
     private List<Judge> judgeList;
 
     public Division() {
+    }
+
+    public Division(DivisionType divisionType) {
+        this.judgeList = new ArrayList<>();
+        this.divisionType = divisionType;
+        this.stageList = new ArrayList<>();
+        for (StageType stageType : StageType.values()){
+            stageList.add(new Stage(stageType));
+        }
     }
 
     public Long getId() {

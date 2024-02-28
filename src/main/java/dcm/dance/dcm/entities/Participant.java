@@ -15,9 +15,13 @@ public class Participant {
     @Column
     private String country;
     @Column
-    private String role;
+    private String emailAddress;
+    @Column
+    private RoleType role;
     @Column
     private boolean checkedIn;
+    @Column
+    private String coupleNumber;
 
     @OneToMany(mappedBy = "Participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("participant-grade")
@@ -28,6 +32,22 @@ public class Participant {
 
     public Participant() {
 
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAdress) {
+        this.emailAddress = emailAdress;
+    }
+
+    public String getCoupleNumber() {
+        return coupleNumber;
+    }
+
+    public void setCoupleNumber(String coupleNumber) {
+        this.coupleNumber = coupleNumber;
     }
 
     public Long getId() {
@@ -54,11 +74,11 @@ public class Participant {
         this.country = country;
     }
 
-    public String getRole() {
+    public RoleType getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleType role) {
         this.role = role;
     }
 

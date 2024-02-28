@@ -11,7 +11,9 @@ public class Contest {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String Name;
+    private String name;
+    @Column
+    private String location;
     @OneToMany(mappedBy = "Contest",  cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("contest-division")
     private List<Division> divisionList;
@@ -23,16 +25,24 @@ public class Contest {
         return id;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public List<Division> getDivisionList() {

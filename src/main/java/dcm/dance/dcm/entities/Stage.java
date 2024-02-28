@@ -28,6 +28,10 @@ public class Stage {
     public Stage() {
     }
 
+    public Stage(StageType stageType) {
+        this.stageType = stageType;
+    }
+
     public Long getId() {
         return id;
     }
