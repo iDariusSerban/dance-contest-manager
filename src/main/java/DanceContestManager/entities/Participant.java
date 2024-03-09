@@ -3,6 +3,7 @@ package DanceContestManager.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,8 @@ public class Participant {
     private List<StageParticipant> stageParticipantList;
 
     public Participant() {
-
+        this.stageParticipantList = new ArrayList<>();
+        this.gradeList = new ArrayList<>();
     }
 
     public String getEmailAddress() {

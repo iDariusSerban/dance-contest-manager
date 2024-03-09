@@ -23,6 +23,7 @@ public class JudgeController {
     public ResponseEntity<Judge> addJudge(@RequestBody JudgeRequestDTO judgeRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(judgeService.addJudge(judgeRequestDTO));
     }
+
 }
 
 

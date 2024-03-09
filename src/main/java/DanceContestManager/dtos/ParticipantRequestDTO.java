@@ -15,6 +15,7 @@ public class ParticipantRequestDTO {
     private String contestName;
     private DivisionType divisionType;
 
+
     public ParticipantRequestDTO(String name, String country, String emailAddress, RoleType role, String contestName, DivisionType divisionType) {
         this.name = name;
         this.country = country;

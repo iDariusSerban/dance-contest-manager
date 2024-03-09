@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JudgeRepository extends JpaRepository<Judge,Long> {
+
+    Judge findJudgeByNameIs (String name);
 }

@@ -35,21 +35,18 @@ public class ParticipantService {
         participant.setCountry(participantRequestDTO.getCountry());
         participant.setEmailAddress(participantRequestDTO.getEmailAddress());
         participant.setRole(participantRequestDTO.getRole());
-        participant.setStageParticipantList(createStageParticipant(participantRequestDTO, participant));
-
-
+        participant.getStageParticipantList().add(createStageParticipant(participantRequestDTO, participant));
         return participantRepository.save(participant);
     }
 
     @Transactional
-    public List<StageParticipant> createStageParticipant(ParticipantRequestDTO participantRequestDTO, Participant participant) {
+    public StageParticipant createStageParticipant(ParticipantRequestDTO participantRequestDTO, Participant participant) {
         StageParticipant stageParticipant = new StageParticipant();
-        List<StageParticipant> stageParticipantList =new ArrayList<>();
         stageParticipant.setStage(getStage(participantRequestDTO));
         stageParticipant.setParticipant(participant);
         stageParticipant.setCheckedIn(false);
-        stageParticipantList.add(stageParticipant);
-        return stageParticipantList;
+
+        return stageParticipant;
     }
 
     @Transactional
@@ -60,4 +57,6 @@ public class ParticipantService {
 
         return division.getStageList().get(0);
     }
+
+
 }
