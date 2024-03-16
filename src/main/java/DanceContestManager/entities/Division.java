@@ -3,11 +3,18 @@ package DanceContestManager.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+
 public class Division {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +33,7 @@ public class Division {
     @JsonManagedReference("division-judge")
     private List<Judge> judgeList;
 
-    public Division() {
-    }
+
 
     public Division(DivisionType divisionType, Contest contest) {
 
@@ -38,44 +44,5 @@ public class Division {
 
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public DivisionType getDivisionType() {
-        return divisionType;
-    }
-
-    public void setDivisionType(DivisionType divisionType) {
-        this.divisionType = divisionType;
-    }
-
-    public Contest getContest() {
-        return contest;
-    }
-
-    public void setContest(Contest contest) {
-        this.contest = contest;
-    }
-
-    public List<Stage> getStageList() {
-        return stageList;
-    }
-
-    public void setStageList(List<Stage> stageList) {
-        this.stageList = stageList;
-    }
-
-    public List<Judge> getJudgeList() {
-        return judgeList;
-    }
-
-    public void setJudgeList(List<Judge> judgeList) {
-        this.judgeList = judgeList;
-    }
 
 }

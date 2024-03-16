@@ -3,43 +3,56 @@ package DanceContestManager.services;
 import DanceContestManager.entities.*;
 import DanceContestManager.repositories.*;
 import DanceContestManager.dtos.ParticipantRequestDTO;
+import com.google.zxing.WriterException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ParticipantService {
 
     private ParticipantRepository participantRepository;
-    private StageRepository stageRepository;
+    private StageParticipantRepository stageParticipantRepository;
     private ContestRepository contestRepository;
     private DivisionRepository divisionRepository;
     private GradeRepository gradeRepository;
+    private QrCodeService qrCodeService;
 
     @Autowired
-    public ParticipantService(ParticipantRepository participantRepository, StageRepository stageRepository, ContestRepository contestRepository, DivisionRepository divisionRepository, GradeRepository gradeRepository) {
+    public ParticipantService(ParticipantRepository participantRepository, StageParticipantRepository stageParticipantRepository, ContestRepository contestRepository, DivisionRepository divisionRepository, GradeRepository gradeRepository, QrCodeService qrCodeService) {
         this.participantRepository = participantRepository;
-        this.stageRepository = stageRepository;
+        this.stageParticipantRepository = stageParticipantRepository;
         this.contestRepository = contestRepository;
         this.divisionRepository = divisionRepository;
         this.gradeRepository = gradeRepository;
+        this.qrCodeService = qrCodeService;
     }
 
+
     @Transactional
-    public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) {
-        Participant participant = new Participant();
-        participant.setName(participantRequestDTO.getName());
-        participant.setCountry(participantRequestDTO.getCountry());
-        participant.setEmailAddress(participantRequestDTO.getEmailAddress());
-        participant.setRole(participantRequestDTO.getRole());
+    public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {
+        Participant participant = mapFromDTO(participantRequestDTO);
         participant.getStageParticipantList().add(createStageParticipant(participantRequestDTO, participant));
+// generez QR code
+
+
+        qrCodeService.generateQrCode(generateContestNumber().toString());
+
         return participantRepository.save(participant);
     }
 
-    @Transactional
+    public Integer generateContestNumber() {
+
+        Optional<StageParticipant> stageParticipant = stageParticipantRepository.findTopByOrderByContestNumberDesc();
+        return stageParticipant.map(participant -> participant.getContestNumber() + 1).orElse(1);
+
+    }
+
     public StageParticipant createStageParticipant(ParticipantRequestDTO participantRequestDTO, Participant participant) {
         StageParticipant stageParticipant = new StageParticipant();
         stageParticipant.setStage(getStage(participantRequestDTO));
@@ -58,5 +71,12 @@ public class ParticipantService {
         return division.getStageList().get(0);
     }
 
-
+    public Participant mapFromDTO(ParticipantRequestDTO participantRequestDTO) {
+        Participant participant = new Participant();
+        participant.setName(participantRequestDTO.getName());
+        participant.setCountry(participantRequestDTO.getCountry());
+        participant.setEmailAddress(participantRequestDTO.getEmailAddress());
+        participant.setRole(participantRequestDTO.getRole());
+        return participant;
+    }
 }
