@@ -28,4 +28,6 @@ public class ParticipantController {
     public ResponseEntity<Participant> addParticipant(@RequestBody ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {
         return ResponseEntity.status(HttpStatus.CREATED).body(participantService.addParticipant(participantRequestDTO));
     }
+
+    //TODO checkinParticipant
 }

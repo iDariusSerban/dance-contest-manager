@@ -23,6 +23,8 @@ public class JudgeService {
         this.contestRepository = contestRepository;
     }
 
+    //TODO refactor to get also the judge id and to assign existing judge to division of contest
+    //TODO another method that just creates a judge
     @Transactional
     public Judge addJudge(JudgeRequestDTO judgeRequestDTO) {
         Judge judge = new Judge();

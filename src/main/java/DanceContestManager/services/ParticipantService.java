@@ -38,10 +38,16 @@ public class ParticipantService {
     public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {
         Participant participant = mapFromDTO(participantRequestDTO);
         participant.getStageParticipantList().add(createStageParticipant(participantRequestDTO, participant));
+        //TODO de facut o metoda care verifica daca participantul se adauga in pimul stage al diviziei (doar asa ii generam qr code)
+       // if (isAddedToFirstStage)
 // generez QR code
 
 
-        qrCodeService.generateQrCode(generateContestNumber().toString());
+        byte[] qrCode = qrCodeService.generateQrCode(generateContestNumber().toString());
+        //trimiti mail la participant.getMail() cu atasament qr code in format png
+        //salvezi in stageparticipant qrcode-ul generat
+
+
 
         return participantRepository.save(participant);
     }

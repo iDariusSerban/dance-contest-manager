@@ -22,4 +22,8 @@ public class GradeController {
     public ResponseEntity<Grade> addGrade(@RequestBody GradeRequestDTO gradeRequestDTO){
         return ResponseEntity.status(HttpStatus.CREATED).body(gradeService.addgrade(gradeRequestDTO));
     }
+
+    //TODO delete grade
+    //TODO update grade
+    //TODO getContestGradesByParticipant   getStageGradeByParticipant   getAllGrades   getAllGradesByContest  getAllGradesByStage
 }

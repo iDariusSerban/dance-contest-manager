@@ -22,6 +22,7 @@ public class GradeService {
         this.stageRepository = stageRepository;
         this.participantRepository = participantRepository;
     }
+    //TODO update logic when grade is relate to stageparticipant
 
     public Grade addgrade (GradeRequestDTO gradeRequestDTO){
         Grade grade =new Grade();

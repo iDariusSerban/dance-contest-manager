@@ -24,6 +24,11 @@ public class JudgeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(judgeService.addJudge(judgeRequestDTO));
     }
 
+
+    //TODO findAllJudges, findAllByContest findAllByDivision
+    //TODO deleteJudge
+    //TODO createNewJudge
+
 }
 
 

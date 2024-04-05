@@ -29,4 +29,6 @@ public class ContestController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(contestService.addContest(contestRequestDTO));
     }
+
+    //TODO update, delete, findByid, findAll
 }
