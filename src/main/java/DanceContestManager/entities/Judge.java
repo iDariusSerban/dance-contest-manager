@@ -21,6 +21,9 @@ public class Judge {
     @Column
     private String name;
 
+    @Column
+    private String country;
+
     @ManyToOne
     @JsonBackReference("division-judge")
     @JoinColumn(name = "division_id")

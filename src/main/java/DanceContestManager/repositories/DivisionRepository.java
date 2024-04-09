@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DivisionRepository extends JpaRepository<Division, Long> {
     Division findDivisionByDivisionTypeAndContest (DivisionType divisionType, Contest contest);
+
 }
