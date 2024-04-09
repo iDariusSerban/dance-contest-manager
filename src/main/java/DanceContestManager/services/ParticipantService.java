@@ -5,6 +5,7 @@ import DanceContestManager.repositories.*;
 import DanceContestManager.dtos.ParticipantRequestDTO;
 import com.google.zxing.WriterException;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ParticipantService {
 
     private ParticipantRepository participantRepository;
@@ -23,16 +25,10 @@ public class ParticipantService {
     private GradeRepository gradeRepository;
     private QrCodeService qrCodeService;
 
-    @Autowired
-    public ParticipantService(ParticipantRepository participantRepository, StageParticipantRepository stageParticipantRepository, ContestRepository contestRepository, DivisionRepository divisionRepository, GradeRepository gradeRepository, QrCodeService qrCodeService) {
-        this.participantRepository = participantRepository;
-        this.stageParticipantRepository = stageParticipantRepository;
-        this.contestRepository = contestRepository;
-        this.divisionRepository = divisionRepository;
-        this.gradeRepository = gradeRepository;
-        this.qrCodeService = qrCodeService;
-    }
 
+    public void asignParticipantToContest (Long participant_id, Long contest_id){
+
+}
 
     @Transactional
     public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {

@@ -32,9 +32,7 @@ public class Participant {
     private RoleType role;
 
 
-    @OneToMany(mappedBy = "participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JsonManagedReference("participant-grade")
-    private List<Grade> gradeList;
+
 
     @OneToMany(mappedBy = "participant", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("participant-stageParticipant")
@@ -42,7 +40,6 @@ public class Participant {
 
     public Participant() {
         this.stageParticipantList = new ArrayList<>();
-        this.gradeList = new ArrayList<>();
     }
 
 

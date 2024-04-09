@@ -2,13 +2,16 @@ package DanceContestManager.services;
 
 import DanceContestManager.dtos.GradeRequestDTO;
 import DanceContestManager.entities.Grade;
+import DanceContestManager.entities.StageParticipant;
 import DanceContestManager.repositories.GradeRepository;
 import DanceContestManager.repositories.JudgeRepository;
 import DanceContestManager.repositories.ParticipantRepository;
 import DanceContestManager.repositories.StageRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class GradeService {
 
     private GradeRepository gradeRepository;
@@ -16,19 +19,18 @@ public class GradeService {
     private StageRepository stageRepository;
     private ParticipantRepository participantRepository;
 
-    public GradeService(GradeRepository gradeRepository, JudgeRepository judgeRepository, StageRepository stageRepository, ParticipantRepository participantRepository) {
-        this.gradeRepository = gradeRepository;
-        this.judgeRepository = judgeRepository;
-        this.stageRepository = stageRepository;
-        this.participantRepository = participantRepository;
-    }
+
     //TODO update logic when grade is relate to stageparticipant
 
     public Grade addgrade (GradeRequestDTO gradeRequestDTO){
         Grade grade =new Grade();
         grade.setGradeValue(gradeRequestDTO.getGradeValue());
         grade.setJudge(judgeRepository.findJudgeByNameIs(gradeRequestDTO.getJudgeName()));
-        grade.setParticipant(participantRepository.findParticipantById(gradeRequestDTO.getParticipantID()));
+       // StageParticipant stageParticipant =
+                // caut participantul
+        //caut stage
+
+        //grade.setParticipant(participantRepository.findParticipantById(gradeRequestDTO.getParticipantID()));
 
         return gradeRepository.save(grade);
     }

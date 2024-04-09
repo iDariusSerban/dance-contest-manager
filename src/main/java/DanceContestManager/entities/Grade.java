@@ -23,14 +23,9 @@ public class Grade {
 
     //TODO remove relation to stage and participant, and add relation only to stagerparticipant
     @ManyToOne
-    @JsonBackReference("stage-grade")
-    @JoinColumn(name = "stage_id")
-    private Stage stage;
-
-    @ManyToOne
-    @JsonBackReference("participant-grade")
-    @JoinColumn(name = "participant_id")
-    private Participant participant;
+    @JsonBackReference("stageParticipant-grade")
+    @JoinColumn(name = "stageParticipant_id")
+    private StageParticipant stageParticipant;
 
 
 }

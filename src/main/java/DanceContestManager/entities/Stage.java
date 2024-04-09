@@ -28,9 +28,7 @@ public class Stage {
     @JoinColumn(name = "division_id")
     private Division division;
 
-    @OneToMany(mappedBy = "stage", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
-    @JsonManagedReference("stage-grade")
-    private List<Grade> gradeList;
+
 
     @OneToMany(mappedBy = "stage", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("stage-stageParticipant")
