@@ -6,12 +6,9 @@ import DanceContestManager.dtos.ParticipantRequestDTO;
 import com.google.zxing.WriterException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,23 +23,24 @@ public class ParticipantService {
     private QrCodeService qrCodeService;
 
 
-    public void asignParticipantToContest (Long participant_id, Long contest_id){
+    public void asignParticipantToStage(Long participant_id, Long contest_id) {
 
-}
+    }
 
     @Transactional
     public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {
+
+
         Participant participant = mapFromDTO(participantRequestDTO);
         participant.getStageParticipantList().add(createStageParticipant(participantRequestDTO, participant));
         //TODO de facut o metoda care verifica daca participantul se adauga in pimul stage al diviziei (doar asa ii generam qr code)
-       // if (isAddedToFirstStage)
+        // if (isAddedToFirstStage)
 // generez QR code
 
 
-        byte[] qrCode = qrCodeService.generateQrCode(generateContestNumber().toString());
+        // byte[] qrCode = qrCodeService.generateQrCode(participant.getId().toString());
         //trimiti mail la participant.getMail() cu atasament qr code in format png
         //salvezi in stageparticipant qrcode-ul generat
-
 
 
         return participantRepository.save(participant);
@@ -53,12 +51,15 @@ public class ParticipantService {
         Optional<StageParticipant> stageParticipant = stageParticipantRepository.findTopByOrderByContestNumberDesc();
         return stageParticipant.map(participant -> participant.getContestNumber() + 1).orElse(1);
 
+        //(participant -> participant.getContestNumber() + 1).orElse(1);
+
     }
 
     public StageParticipant createStageParticipant(ParticipantRequestDTO participantRequestDTO, Participant participant) {
         StageParticipant stageParticipant = new StageParticipant();
         stageParticipant.setStage(getStage(participantRequestDTO));
         stageParticipant.setParticipant(participant);
+        stageParticipant.setContestNumber(generateContestNumber());
         stageParticipant.setCheckedIn(false);
 
         return stageParticipant;
@@ -80,5 +81,21 @@ public class ParticipantService {
         participant.setEmailAddress(participantRequestDTO.getEmailAddress());
         participant.setRole(participantRequestDTO.getRole());
         return participant;
+    }
+
+//    public Boolean checkInParticipant() {
+//        //Long stageparticipant_id =
+//        Optional stageParticpantOptional = stageParticipantRepository.findById(stageparticipant_id);
+//        return stageParticpant.isPresent();
+//    }
+
+    public boolean deleteParticipant(Long participant_id) {
+        Optional<Participant> participantOptional = participantRepository.findById(participant_id);
+        if (participantOptional.isPresent()) {
+            participantRepository.delete(participantOptional.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 }

@@ -23,9 +23,9 @@ public class JudgeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(judgeService.createNewJudge(judgeRequestDTO));
     }
 
-    @PutMapping("/add/{judge_id}")
-    public ResponseEntity<Judge> addJudgeToDivision(@PathVariable Long judge_id, @RequestBody JudgeAlocRequestDTO judgeAlocRequestDTO) {
-        return ResponseEntity.ok(judgeService.addJudgeToDivision(judge_id, judgeAlocRequestDTO));
+    @PutMapping("/add")
+    public ResponseEntity<Judge> addJudgeToDivision( @RequestBody JudgeAlocRequestDTO judgeAlocRequestDTO) {
+        return ResponseEntity.ok(judgeService.addJudgeToDivision(judgeAlocRequestDTO));
     }
 
     @GetMapping("/findAll")

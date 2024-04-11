@@ -29,13 +29,13 @@ public class JudgeService {
         Judge judge = new Judge();
         judge.setName(judgeRequestDTO.getName());
         judge.setCountry(judgeRequestDTO.getCountry());
-        return judge;
+        return judgeRepository.save(judge);
     }
 
     @Transactional
-    public Judge addJudgeToDivision(Long judge_id, JudgeAlocRequestDTO judgeAlocRequestDTO) {
+    public Judge addJudgeToDivision(JudgeAlocRequestDTO judgeAlocRequestDTO) {
 
-        Judge judge = judgeRepository.findById(judge_id).orElseThrow(() -> new ResourceNotFoundException("Judge negasit"));
+        Judge judge = judgeRepository.findById(judgeAlocRequestDTO.getJudge_id()).orElseThrow(() -> new ResourceNotFoundException("Judge negasit"));
         Contest contest = contestRepository.findContestByName(judgeAlocRequestDTO.getContestName());
         Division division = divisionRepository.findDivisionByDivisionTypeAndContest(judgeAlocRequestDTO.getDivisionType(), contest);
         judge.setDivision(division);

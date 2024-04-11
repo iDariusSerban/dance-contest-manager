@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class JudgeAlocRequestDTO {
-    private String name;
+    private Long judge_id;
     private String contestName;
     private DivisionType divisionType;
 
