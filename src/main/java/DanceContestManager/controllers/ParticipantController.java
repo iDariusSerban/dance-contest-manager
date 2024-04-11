@@ -3,7 +3,9 @@ package DanceContestManager.controllers;
 import DanceContestManager.dtos.ParticipantRequestDTO;
 import DanceContestManager.entities.Participant;
 import DanceContestManager.services.ParticipantService;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,15 +23,15 @@ public class ParticipantController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<Participant> addParticipant(@RequestBody ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {
+    public ResponseEntity<Participant> addParticipant(@RequestBody ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException, MessagingException {
         return ResponseEntity.status(HttpStatus.CREATED).body(participantService.addParticipant(participantRequestDTO));
     }
 
     //TODO checkinParticipant
-//    @PutMapping ("/checkInParticipant")
-//    public ResponseEntity<Participant> checkInParticipant (){
-//        return ResponseEntity.ok(participantService.)
-//    }
+    @PutMapping("/checkIn/{id}")
+    public ResponseEntity<Participant> checkInParticipant(@PathVariable Long id) {
+        return ResponseEntity.ok(participantService.checkInParticipant(id));
+    }
 
     @DeleteMapping("/delete/{participant_id}")
     public ResponseEntity<Void> deleteParticiapnt(@PathVariable Long participant_id) {

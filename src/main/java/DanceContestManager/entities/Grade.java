@@ -15,13 +15,13 @@ public class Grade {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     @Column
-    private int gradeValue;
+    private Double gradeValue;
     @ManyToOne
     @JsonBackReference("judge-grade")
     @JoinColumn(name = "judge_id")
     private Judge judge;
 
-    //TODO remove relation to stage and participant, and add relation only to stagerparticipant
+
     @ManyToOne
     @JsonBackReference("stageParticipant-grade")
     @JoinColumn(name = "stageParticipant_id")

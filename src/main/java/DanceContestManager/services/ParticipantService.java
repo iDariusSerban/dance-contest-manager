@@ -1,14 +1,22 @@
 package DanceContestManager.services;
 
 import DanceContestManager.entities.*;
+import DanceContestManager.exceptions.ResourceNotFoundException;
 import DanceContestManager.repositories.*;
 import DanceContestManager.dtos.ParticipantRequestDTO;
+import com.google.zxing.NotFoundException;
 import com.google.zxing.WriterException;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Optional;
 
 @Service
@@ -22,38 +30,49 @@ public class ParticipantService {
     private GradeRepository gradeRepository;
     private QrCodeService qrCodeService;
 
+    private JavaMailSender emailSender;
 
-    public void asignParticipantToStage(Long participant_id, Long contest_id) {
+
+    public void graduateStage(Participant participant) { // poate e stageParticipant
+        //calculez media notelor participantului
+        //separ participantii pe categorii, lider si follower
+        //din totalul participantilor prima jumatate merge mai departe in urmatorul stage
 
     }
+    //TODO de facut o metoda care verifica daca participantul se adauga in pimul stage al diviziei (doar asa ii generam qr code)
+    // if (isAddedToFirstStage)
 
     @Transactional
-    public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException {
-
+    public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException, MessagingException {
 
         Participant participant = mapFromDTO(participantRequestDTO);
-        participant.getStageParticipantList().add(createStageParticipant(participantRequestDTO, participant));
-        //TODO de facut o metoda care verifica daca participantul se adauga in pimul stage al diviziei (doar asa ii generam qr code)
-        // if (isAddedToFirstStage)
-// generez QR code
+        StageParticipant stageParticipant = createStageParticipant(participantRequestDTO, participant);
+        participant.getStageParticipantList().add(stageParticipant);
+
+        byte[] qrCode = qrCodeService.generateQrCode(stageParticipant.getContestNumber().toString());
+        String ecnoded = Base64.getEncoder().encode(qrCode).toString();
+        stageParticipant.setQrCode(qrCode); //salvez in stageparticipant qrcode-ul generat
 
 
-        // byte[] qrCode = qrCodeService.generateQrCode(participant.getId().toString());
         //trimiti mail la participant.getMail() cu atasament qr code in format png
-        //salvezi in stageparticipant qrcode-ul generat
-
+        sendEmailWithQRCode(participant.getEmailAddress(), qrCode, participantRequestDTO.getContestName());
 
         return participantRepository.save(participant);
     }
 
-    public Integer generateContestNumber() {
+    private void sendEmailWithQRCode(String recipientEmail, byte[] qrCode, String contestName) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        Optional<StageParticipant> stageParticipant = stageParticipantRepository.findTopByOrderByContestNumberDesc();
-        return stageParticipant.map(participant -> participant.getContestNumber() + 1).orElse(1);
+        helper.setTo(recipientEmail);
+        helper.setSubject("Confirmation of Registration:" + contestName);
+        helper.setText("Your checkIn code is attached, please present it when you arrive at the venue.");
 
-        //(participant -> participant.getContestNumber() + 1).orElse(1);
+        helper.addAttachment("QRCode.png", new ByteArrayResource(qrCode));
 
+        emailSender.send(message);
     }
+
 
     public StageParticipant createStageParticipant(ParticipantRequestDTO participantRequestDTO, Participant participant) {
         StageParticipant stageParticipant = new StageParticipant();
@@ -65,7 +84,12 @@ public class ParticipantService {
         return stageParticipant;
     }
 
-    @Transactional
+    public Integer generateContestNumber() {
+
+        Optional<StageParticipant> stageParticipant = stageParticipantRepository.findTopByOrderByContestNumberDesc();
+        return stageParticipant.map(participant -> participant.getContestNumber() + 1).orElse(1);
+    }
+
     public Stage getStage(ParticipantRequestDTO participantRequestDTO) {
 
         Contest contest = contestRepository.findContestByName(participantRequestDTO.getContestName());
@@ -83,11 +107,12 @@ public class ParticipantService {
         return participant;
     }
 
-//    public Boolean checkInParticipant() {
-//        //Long stageparticipant_id =
-//        Optional stageParticpantOptional = stageParticipantRepository.findById(stageparticipant_id);
-//        return stageParticpant.isPresent();
-//    }
+    public Participant checkInParticipant(Long stageParticipantId) {
+        StageParticipant stageParticipant = stageParticipantRepository.findById(stageParticipantId).orElseThrow(() -> new ResourceNotFoundException("StageParticipant negasit"));
+        stageParticipant.setCheckedIn(true);
+
+        return stageParticipant.getParticipant();
+    }
 
     public boolean deleteParticipant(Long participant_id) {
         Optional<Participant> participantOptional = participantRepository.findById(participant_id);

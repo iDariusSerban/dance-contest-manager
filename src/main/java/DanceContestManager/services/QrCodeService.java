@@ -11,9 +11,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Base64;
 
 @Service
 public class QrCodeService {
@@ -35,11 +37,14 @@ public class QrCodeService {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(bufferedImage, "png", baos);
 
+
         return baos.toByteArray();
     }
 
-    public static String decodeQRCode(byte[] qrCodeImage) throws IOException, NotFoundException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(qrCodeImage);
+
+    public String decodeQRCode(String qrCodeImage) throws IOException, NotFoundException {
+        byte[] a = Base64.getDecoder().decode("[B@742b8bb3");
+        ByteArrayInputStream bais = new ByteArrayInputStream(a);
         BufferedImage bufferedImage = ImageIO.read(bais);
 
         BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(
@@ -51,5 +56,7 @@ public class QrCodeService {
         Result result = new MultiFormatReader().decode(binaryBitmap, hints);
 
         return result.getText();
+
+
     }
 }

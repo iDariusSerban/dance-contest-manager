@@ -17,9 +17,16 @@ public class StageParticipant {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-
     @Column
     private Integer contestNumber;
+    @Column
+    private Double avgGrade;
+    @Column
+    private boolean checkedIn;
+    @Lob // Indicates that this field should be mapped to a large object type in the database
+    @Column(name = "qr_code", columnDefinition = "BLOB")
+    private byte[] qrCode;
+
 
     @ManyToOne
     @JsonBackReference("participant-stageParticipant")
@@ -35,8 +42,7 @@ public class StageParticipant {
     @JoinColumn(name = "stage_id")
     private Stage stage;
 
-    @Column
-    private boolean checkedIn;
+
 
 
 }

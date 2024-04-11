@@ -18,6 +18,8 @@ public class Stage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
+    private Boolean completed;
 
     @Column
     @Enumerated(EnumType.STRING)
@@ -29,11 +31,9 @@ public class Stage {
     private Division division;
 
 
-
     @OneToMany(mappedBy = "stage", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     @JsonManagedReference("stage-stageParticipant")
     private List<StageParticipant> stageParticipantList;
-
 
 
     public Stage(StageType stageType, Division division) {

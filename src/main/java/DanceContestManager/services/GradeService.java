@@ -19,8 +19,6 @@ public class GradeService {
 
     private GradeRepository gradeRepository;
     private JudgeRepository judgeRepository;
-    private StageRepository stageRepository;
-    private ParticipantRepository participantRepository;
     private StageParticipantRepository stageParticipantRepository;
 
 
@@ -38,15 +36,15 @@ public class GradeService {
         return gradeRepository.save(grade);
     }
 
-    public List<GradeResponseDTO> findAll (){
+    public List<GradeResponseDTO> findAll() {
         List<Grade> gradeList = gradeRepository.findAll();
         return gradeList.stream()
-                .map(grade -> mapFromGradeToDTO(grade))
+                .map(this::mapFromGradeToDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public GradeResponseDTO mapFromGradeToDTO (Grade grade){
+    public GradeResponseDTO mapFromGradeToDTO(Grade grade) {
         GradeResponseDTO gradeResponseDTO = new GradeResponseDTO();
         gradeResponseDTO.setGradeId(grade.getId());
         gradeResponseDTO.setGradeValue(grade.getGradeValue());
@@ -65,5 +63,14 @@ public class GradeService {
         } else {
             return false;
         }
+
+    }
+
+    public Double calculateAvgGradePerParticipant(StageParticipant stageParticipant) {
+        return stageParticipant.getGradeList().stream()
+                .map(Grade::getGradeValue)
+                .mapToDouble(Double::doubleValue)
+                .average().orElseThrow(() -> new ResourceNotFoundException("Nu exista note"));
+
     }
 }

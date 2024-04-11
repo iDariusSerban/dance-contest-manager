@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GradeRequestDTO {
     private Long grade_id;
-    private int gradeValue;
+    private Double gradeValue;
     private String judgeName;
     private Long stageParticipantId;
 

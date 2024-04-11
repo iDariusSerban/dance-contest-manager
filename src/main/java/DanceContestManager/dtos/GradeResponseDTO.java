@@ -12,7 +12,7 @@ import lombok.Setter;
 public class GradeResponseDTO {
 
     private Long gradeId;
-    private int gradeValue;
+    private Double gradeValue;
     private Long judgeId;
     private Long ParticipantId;
     private Long DivisionId;
