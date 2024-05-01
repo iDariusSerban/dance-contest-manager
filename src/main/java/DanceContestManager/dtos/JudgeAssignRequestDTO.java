@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class JudgeAlocRequestDTO {
+public class JudgeAssignRequestDTO {
     private Long judge_id;
     private String contestName;
     private DivisionType divisionType;

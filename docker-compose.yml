@@ -16,7 +16,7 @@ services:
 
 
   # Spring Boot Application Service
-  DanceContestManager-app:
+  dcm-app:
     build: .
     container_name: spring-boot-app
     depends_on:

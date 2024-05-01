@@ -1,6 +1,6 @@
 package DanceContestManager.services;
 
-import DanceContestManager.dtos.JudgeAlocRequestDTO;
+import DanceContestManager.dtos.JudgeAssignRequestDTO;
 import DanceContestManager.dtos.JudgeRequestDTO;
 import DanceContestManager.entities.Contest;
 import DanceContestManager.entities.Division;
@@ -33,11 +33,11 @@ public class JudgeService {
     }
 
     @Transactional
-    public Judge addJudgeToDivision(JudgeAlocRequestDTO judgeAlocRequestDTO) {
+    public Judge addJudgeToDivision(JudgeAssignRequestDTO judgeAssignRequestDTO) {
 
-        Judge judge = judgeRepository.findById(judgeAlocRequestDTO.getJudge_id()).orElseThrow(() -> new ResourceNotFoundException("Judge negasit"));
-        Contest contest = contestRepository.findContestByName(judgeAlocRequestDTO.getContestName());
-        Division division = divisionRepository.findDivisionByDivisionTypeAndContest(judgeAlocRequestDTO.getDivisionType(), contest);
+        Judge judge = judgeRepository.findById(judgeAssignRequestDTO.getJudge_id()).orElseThrow(() -> new ResourceNotFoundException("Judge negasit"));
+        Contest contest = contestRepository.findContestByName(judgeAssignRequestDTO.getContestName());
+        Division division = divisionRepository.findDivisionByDivisionTypeAndContest(judgeAssignRequestDTO.getDivisionType(), contest);
         judge.setDivision(division);
         return judgeRepository.save(judge);
     }

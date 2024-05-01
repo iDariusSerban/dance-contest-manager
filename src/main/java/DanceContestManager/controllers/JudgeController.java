@@ -1,6 +1,6 @@
 package DanceContestManager.controllers;
 
-import DanceContestManager.dtos.JudgeAlocRequestDTO;
+import DanceContestManager.dtos.JudgeAssignRequestDTO;
 import DanceContestManager.dtos.JudgeRequestDTO;
 import DanceContestManager.entities.Judge;
 import DanceContestManager.services.JudgeService;
@@ -24,8 +24,8 @@ public class JudgeController {
     }
 
     @PutMapping("/add")
-    public ResponseEntity<Judge> addJudgeToDivision( @RequestBody JudgeAlocRequestDTO judgeAlocRequestDTO) {
-        return ResponseEntity.ok(judgeService.addJudgeToDivision(judgeAlocRequestDTO));
+    public ResponseEntity<Judge> addJudgeToDivision( @RequestBody JudgeAssignRequestDTO judgeAssignRequestDTO) {
+        return ResponseEntity.ok(judgeService.addJudgeToDivision(judgeAssignRequestDTO));
     }
 
     @GetMapping("/findAll")
