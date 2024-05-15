@@ -16,8 +16,11 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,13 +37,29 @@ public class ParticipantService {
 
 
     public void graduateStage(Participant participant) { // poate e stageParticipant
-        //calculez media notelor participantului
-        //separ participantii pe categorii, lider si follower
-        //din totalul participantilor prima jumatate merge mai departe in urmatorul stage
+
+        //TODO de completat
+
+        //doar avansez participantul al stage-ul urmator (daca exista un stage urmator, daca nu exceptie)
+        //adica creez un nou StageParticipant care sa lege urmatorul stage de participantul nostru
 
     }
-    //TODO de facut o metoda care verifica daca participantul se adauga in pimul stage al diviziei (doar asa ii generam qr code)
-    // if (isAddedToFirstStage)
+
+    public List<Participant> getEligibleForPromotionParticipants (List<Participant> participantList){
+        List<Participant> leaders = participantList.stream()
+                .filter(participant -> participant.getRole().name().equals("leader"))
+                .collect(Collectors.toList());
+
+        List<Participant> followers = participantList.stream()
+                .filter(participant -> participant.getRole().name().equals("follower"))
+                .collect(Collectors.toList());
+
+        List<Participant> qualified = new ArrayList<>();
+        qualified.addAll(leaders.subList(0, leaders.size()/2));
+        qualified.addAll(followers.subList(0, leaders.size()/2));
+        return  qualified;
+    }
+
 
     @Transactional
     public Participant addParticipant(ParticipantRequestDTO participantRequestDTO) throws IOException, WriterException, MessagingException {
@@ -59,6 +78,8 @@ public class ParticipantService {
 
         return participantRepository.save(participant);
     }
+
+
 
     private void sendEmailWithQRCode(String recipientEmail, byte[] qrCode, String contestName) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();

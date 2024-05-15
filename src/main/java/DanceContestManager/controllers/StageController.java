@@ -21,11 +21,10 @@ public class StageController {
     private StageService stageService;
 
     @GetMapping("/finalizeStage/{stageId}")
-    public ResponseEntity<List<Participant>> finalizeStage(@PathVariable Long stageId) {
+    public ResponseEntity<Void> finalizeStage(@PathVariable Long stageId) {
+
         return ResponseEntity.ok(stageService.finalizeStage(stageId));
     }
-    //TODO finalizeStage (de adaugat in db o coloana la stage care sa ne zica daca stage-ul s-a desfasurat sau nu
-    //se calculeaza care participanti -au calificat la stage-ul urmator si se adauga toti in stage-ul urmator (folosind addParticipant)
-    //se poate exprota in format PDF rezultatul cu claificatii din stage
+
 
 }
