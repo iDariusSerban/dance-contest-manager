@@ -3,6 +3,7 @@ package DanceContestManager.services;
 import DanceContestManager.dtos.GradeRequestDTO;
 import DanceContestManager.dtos.GradeResponseDTO;
 import DanceContestManager.entities.Grade;
+import DanceContestManager.entities.Participant;
 import DanceContestManager.entities.StageParticipant;
 import DanceContestManager.exceptions.ResourceNotFoundException;
 import DanceContestManager.repositories.*;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +21,7 @@ public class GradeService {
 
     private GradeRepository gradeRepository;
     private JudgeRepository judgeRepository;
+    private ParticipantRepository participantRepository;
     private StageParticipantRepository stageParticipantRepository;
 
 
@@ -66,11 +69,25 @@ public class GradeService {
 
     }
 
-    public Double calculateAvgGradePerParticipant(StageParticipant stageParticipant) {
-        return stageParticipant.getGradeList().stream()
-                .map(Grade::getGradeValue)
-                .mapToDouble(Double::doubleValue)
-                .average().orElseThrow(() -> new ResourceNotFoundException("Nu exista note"));
+    public List<GradeResponseDTO> findAllByParticipant(Long participantId) {
+        Participant participant = participantRepository.findParticipantById(participantId);
+        return participant.getStageParticipantList().stream()
+                .flatMap(this::getGradesFromStageParticipant)
+                .collect(Collectors.toList());
+    }
 
+    public Stream<GradeResponseDTO> getGradesFromStageParticipant(StageParticipant stageParticipant) {
+        List<Grade> gradeList = gradeRepository.findAllByStageParticipant(stageParticipant);
+        return gradeList.stream()
+                .map(this::mapFromGradeToDTO);
+    }
+
+
+    public List<GradeResponseDTO> findAllByParticipantByStage(Long participantId,Long stageId){
+        Participant participant = participantRepository.findParticipantById(participantId);
+        return participant.getStageParticipantList().stream()
+                .filter(stageParticipant -> stageParticipant.getStage().getId().equals(stageId))
+                .flatMap(this::getGradesFromStageParticipant)
+                .collect(Collectors.toList());
     }
 }

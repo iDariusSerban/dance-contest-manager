@@ -1,5 +1,6 @@
 package DanceContestManager.repositories;
 
+import DanceContestManager.entities.Participant;
 import DanceContestManager.entities.StageParticipant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,8 @@ public interface StageParticipantRepository extends JpaRepository<StageParticipa
 
     Optional<StageParticipant> findTopByOrderByContestNumberDesc ();
 
-    List<StageParticipant> findAllByOrderByAvgGradeDesc ();
+    List<StageParticipant> findAllByStageId (Long stageId);
+
+    StageParticipant findByParticipantIdAndStageId (Long participantId , Long stageId);
 
 }

@@ -21,9 +21,9 @@ public class StageController {
     private StageService stageService;
 
     @GetMapping("/finalizeStage/{stageId}")
-    public ResponseEntity<Void> finalizeStage(@PathVariable Long stageId) {
-
-        return ResponseEntity.ok(stageService.finalizeStage(stageId));
+    public ResponseEntity<Void> finalizeStage(@PathVariable Long stageId) throws Exception {
+        stageService.finalizeStage(stageId);
+        return ResponseEntity.ok().build();
     }
 
 

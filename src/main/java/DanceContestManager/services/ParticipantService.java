@@ -16,48 +16,59 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class ParticipantService {
 
+    private StageRepository stageRepository;
     private ParticipantRepository participantRepository;
     private StageParticipantRepository stageParticipantRepository;
     private ContestRepository contestRepository;
     private DivisionRepository divisionRepository;
-    private GradeRepository gradeRepository;
     private QrCodeService qrCodeService;
-
     private JavaMailSender emailSender;
 
+    @Transactional
+    public void graduateStage(Participant participant, Stage stage) throws Exception {
 
-    public void graduateStage(Participant participant) { // poate e stageParticipant
+        if (stage.getStageType().equals(StageType.Final)) {
+            throw new Exception("Acesta este ultimul stage.");
+        }
 
-        //TODO de completat
+        Stage nextStage = stageRepository.findById(stage.getId() + 1).orElseThrow(() -> new ResourceNotFoundException("Stage not found"));
+        Integer contestNumber = stageParticipantRepository.findByParticipantIdAndStageId(participant.getId(), stage.getId()).getContestNumber();
 
-        //doar avansez participantul al stage-ul urmator (daca exista un stage urmator, daca nu exceptie)
-        //adica creez un nou StageParticipant care sa lege urmatorul stage de participantul nostru
-
+        StageParticipant stageParticipant = new StageParticipant();
+        stageParticipant.setParticipant(participant);
+        stageParticipant.setStage(nextStage);
+        stageParticipant.setCheckedIn(true);
+        stageParticipant.setContestNumber(contestNumber);
+        stageParticipantRepository.save(stageParticipant);
     }
 
-    public List<Participant> getEligibleForPromotionParticipants (List<Participant> participantList){
+    public void determineAverageGrade(StageParticipant stageParticipant) {
+        OptionalDouble average = stageParticipant.getGradeList().stream()
+                .mapToDouble(Grade::getGradeValue)
+                .average();
+        stageParticipant.setAvgGrade(average.orElse(0.0));
+    }
+
+    public List<Participant> getEligibleForPromotionParticipants(List<Participant> participantList) {
         List<Participant> leaders = participantList.stream()
                 .filter(participant -> participant.getRole().name().equals("leader"))
-                .collect(Collectors.toList());
+                .toList();
 
         List<Participant> followers = participantList.stream()
                 .filter(participant -> participant.getRole().name().equals("follower"))
-                .collect(Collectors.toList());
+                .toList();
 
         List<Participant> qualified = new ArrayList<>();
-        qualified.addAll(leaders.subList(0, leaders.size()/2));
-        qualified.addAll(followers.subList(0, leaders.size()/2));
-        return  qualified;
+        qualified.addAll(leaders.subList(0, leaders.size() / 2));
+        qualified.addAll(followers.subList(0, leaders.size() / 2));
+        return qualified;
     }
 
 
@@ -70,7 +81,7 @@ public class ParticipantService {
 
         byte[] qrCode = qrCodeService.generateQrCode(stageParticipant.getContestNumber().toString());
         String ecnoded = Base64.getEncoder().encode(qrCode).toString();
-        stageParticipant.setQrCode(qrCode); //salvez in stageparticipant qrcode-ul generat
+        stageParticipant.setQrCode(qrCode);
 
 
         //trimiti mail la participant.getMail() cu atasament qr code in format png
@@ -78,7 +89,6 @@ public class ParticipantService {
 
         return participantRepository.save(participant);
     }
-
 
 
     private void sendEmailWithQRCode(String recipientEmail, byte[] qrCode, String contestName) throws MessagingException {
@@ -131,7 +141,7 @@ public class ParticipantService {
     public Participant checkInParticipant(Long stageParticipantId) {
         StageParticipant stageParticipant = stageParticipantRepository.findById(stageParticipantId).orElseThrow(() -> new ResourceNotFoundException("StageParticipant negasit"));
         stageParticipant.setCheckedIn(true);
-
+        stageParticipantRepository.save(stageParticipant);
         return stageParticipant.getParticipant();
     }
 
@@ -143,5 +153,9 @@ public class ParticipantService {
         } else {
             return false;
         }
+    }
+
+    public Participant findParticipant(Long participantId) {
+        return participantRepository.findById(participantId).orElseThrow(() -> new ResourceNotFoundException("Participantul nu a fost gasit."));
     }
 }

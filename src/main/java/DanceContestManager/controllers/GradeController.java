@@ -42,7 +42,15 @@ public class GradeController {
         return ResponseEntity.ok(gradeService.findAll());
     }
 
+    @GetMapping("/findAllByParticipant/{id}")
+    public ResponseEntity<List<GradeResponseDTO>> findAllGradesByParticipant(@PathVariable Long id) {
+        return ResponseEntity.ok(gradeService.findAllByParticipant(id));
+    }
+
+    @GetMapping("/findAllByParticipantByStage/{participantId}/{stageId}")
+    public ResponseEntity<List<GradeResponseDTO>> findAllGradesByParticipantByStage(@PathVariable Long participantId, @PathVariable Long stageId) {
+        return ResponseEntity.ok(gradeService.findAllByParticipantByStage(participantId, stageId));
+    }
 
 
-    //TODO getContestGradesByParticipant   getStageGradeByParticipant      getAllGradesByContest  getAllGradesByStage
 }
